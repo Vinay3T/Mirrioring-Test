@@ -1,0 +1,22 @@
+back:
+    image: python
+    stage: build
+    script:
+        - pip install -t app/lib -r app/requirements.txt
+        - export PYTHONPATH=$PWD/app/lib:$PYTHONPATH
+        - python -m unittest discover
+    artifacts:
+        paths:
+            - app/lib/
+
+deploy_production:
+    image: google/cloud-sdk
+    stage: deploy
+    environment: production
+    script:
+        - echo $GAE_KEY > /tmp/gae_key.json
+        - gcloud config set project $GAE_PROJECT
+        - gcloud auth activate-service-account --key-file /tmp/gae_key.json
+        - gcloud --quiet app deploy
+    after_script:
+        - rm /tmp/gae_key.json

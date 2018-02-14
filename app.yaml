@@ -1,0 +1,11 @@
+runtime: python27
+threadsafe: true
+
+handlers:
+    -   url: /
+        script: app.app
+        
+api_version: 1
+instance_class: B8
+manual_scaling:
+  instances: 1
